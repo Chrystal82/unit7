@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script>
+
+//********** Assignment 7 - Logging Exceptions to a File//
+
+  console.log("Assignment 7 – Logging Exceptions to a File.");
+  console.log("Testing Try/Catch for Divide by Zero, File Does Not Exist, Array Out of Bounds, and Array is Null scenarios.");
+  console.log("All console error messages are printed from error log file.");
+
+  function writeToLogfile(message) {
+    const logContents = localStorage.getItem('errorLog') || '';
+    localStorage.setItem('errorLog', logContents + message + '\n');
+  }
+
+  function displayLogFile() {
+    const logContents = localStorage.getItem('errorLog') || '';
+    console.log(logContents);
+  }
+
+  const originalConsoleError = console.error;
+  console.error = function (...args) {
+    originalConsoleError.apply(console, args);
+    const errorLog = args.map(arg => arg.toString()).join(' ');
+    writeToLogfile(errorLog);
+  };
+
+  function divideByZero() {
+    throw new Error("Attempted to divide by zero.");
+  }
+
+  function fileDoesNotExist() {
+    throw new Error("Could not find file ‘C:\\NoFileNamedThis.txt’");
+  }
+
+  function arrayOutOfBounds() {
+    const array = [1, 2, 3, 4, 5];
+    throw new Error("Index was outside the bounds of the array.");
+  }
+
+  function arrayIsNull() {
+    let array = [1, 2, 3, 4, 5];
+    array = null;
+    throw new Error("Object reference not set to an instance of an object.");
+  }
+
+  //*********************************************************
+  //****Main Program
+  //*********************************************************
+
+  try {
+    divideByZero();
+  } catch (error) {
+    console.error(error.message);
+  }
+
+  try {
+    fileDoesNotExist();
+  } catch (error) {
+    console.error(error.message);
+  }
+
+  try {
+    arrayOutOfBounds();
+  } catch (error) {
+    console.error(error.message);
+  }
+
+  try {
+    arrayIsNull();
+  } catch (error) {
+    console.error(error.message);
+  }
+
+  displayLogFile();
+
+</script>
+</body>
+</html>
